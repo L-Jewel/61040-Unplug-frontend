@@ -28,7 +28,10 @@ export default class PostConcept {
     return posts;
   }
 
-  async getByAuthor(author: ObjectId) {
+  async getByAuthor(author: ObjectId, date?: Date) {
+    if (date) {
+      return await this.getPosts({ author, dateUpdated: { $gte: date } });
+    }
     return await this.getPosts({ author });
   }
 

@@ -9,6 +9,11 @@ button.btn-small {
   font-size: 80%;
 }
 
+button.btn-icon {
+  padding: 0rem .5rem;
+  border-radius: .75rem;
+}
+
 button.button-error {
   color: white;
   background: var(--red);

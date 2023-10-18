@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TagListComponent from "@/components/Tag/TagListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
@@ -19,13 +20,19 @@ const deletePost = async () => {
 </script>
 
 <template>
-  <p class="author">{{ props.post.author }}</p>
-  <p>{{ props.post.content }}</p>
-  <div class="base">
+  <div class="titlebar">
+    <p class="author">{{ props.post.author }}</p>
     <menu v-if="props.post.author == currentUsername">
       <li><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
       <li><button class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
     </menu>
+    <menu v-else>
+      <li><button class="btn-small pure-button">View Related Content</button></li>
+    </menu>
+  </div>
+  <p>{{ props.post.content }}</p>
+  <TagListComponent :post="$props.post" />
+  <div class="base">
     <article class="timestamp">
       <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
@@ -38,6 +45,11 @@ p {
   margin: 0em;
 }
 
+.titlebar {
+  display: flex;
+  justify-content: space-between;
+}
+
 .author {
   font-weight: bold;
   font-size: 1.2em;
@@ -47,6 +59,7 @@ menu {
   list-style-type: none;
   display: flex;
   flex-direction: row;
+  align-items: baseline;
   gap: 1em;
   padding: 0;
   margin: 0;
