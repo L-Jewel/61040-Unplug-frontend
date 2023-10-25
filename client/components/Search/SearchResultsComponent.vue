@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { fetchy } from "../../utils/fetchy";
-
 let userResults = ref([]);
 
-const searchUsers = async () => {
-  try {
-    const users = await fetchy(`/search/users/${props.query}`, "GET");
-    console.log(users);
-  } catch {
-    return;
-  }
-};
+// const searchUsers = async () => {
+//   try {
+//     const users = await fetchy(`/search/users/${props.query}`, "GET");
+//     console.log(users);
+//   } catch {
+//     return;
+//   }
+// };
 </script>
 
 <template>

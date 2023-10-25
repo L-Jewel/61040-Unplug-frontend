@@ -8,12 +8,12 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 let loaded = ref(false);
 const reportData = {
-  labels: [],
+  labels: new Array<string>(),
   datasets: [
     {
       label: "Screen Time",
       backgroundColor: "#f87979",
-      data: [],
+      data: new Array<number>(),
     },
   ],
 };
