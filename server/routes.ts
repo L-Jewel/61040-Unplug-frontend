@@ -136,7 +136,6 @@ class Routes {
   }
   @Router.delete("/tags/:tag/:_id")
   async removeTag(session: WebSessionDoc, tag: string, _id: ObjectId) {
-    console.log("removing tag!", tag, _id);
     // Check if the user is Limited
     const user = WebSession.getUser(session);
     await Limit.isUserLimited(user);
@@ -157,7 +156,13 @@ class Routes {
     // Check if the user is Limited
     const user = WebSession.getUser(session);
     await Limit.isUserLimited(user);
-    return await Watching.getWatchlist(user);
+    // Get watchlist and convert it to usernames
+    const watchlistIDs: ObjectId[] = await Watching.getWatchlist(user);
+    const watchlistUsernames: string[] = [];
+    for (const _id of watchlistIDs) {
+      watchlistUsernames.push((await User.getUserById(_id)).username);
+    }
+    return watchlistUsernames;
   }
   @Router.post("/watch")
   async watchUser(session: WebSessionDoc, watched_id: ObjectId) {

@@ -4,12 +4,19 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
+import router from "./router";
 
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
 const userStore = useUserStore();
 const { isLoggedIn } = storeToRefs(userStore);
 const { toast } = storeToRefs(useToastStore());
+// const { logoutUser } = useUserStore();
+
+async function logout() {
+  await userStore.logoutUser();
+  void router.push({ name: "Home" });
+}
 
 // Make sure to update the session before mounting the app in case the user is already logged in
 onBeforeMount(async () => {
@@ -22,46 +29,91 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <header>
-    <nav>
-      <div class="title">
+  <div class="app-page">
+    <header>
+      <h1 v-if="isLoggedIn">{{ currentRouteName }}</h1>
+      <div v-else class="title">
         <img src="@/assets/images/logo.svg" />
         <RouterLink :to="{ name: 'Home' }">
           <h1>Unplug</h1>
         </RouterLink>
       </div>
-      <ul>
-        <li>
-          <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
-        </li>
-        <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
-        </li>
-        <li v-else>
-          <RouterLink :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }"> Login </RouterLink>
-        </li>
-      </ul>
-    </nav>
-    <article v-if="toast !== null" class="toast" :class="toast.style">
-      <p>{{ toast.message }}</p>
-    </article>
-  </header>
-  <RouterView />
+      <v-btn v-if="isLoggedIn" @click="logout" variant="tonal">Logout</v-btn>
+      <RouterLink v-else :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }">
+        <v-btn variant="tonal">Login</v-btn>
+      </RouterLink>
+      <article v-if="toast !== null" class="toast" :class="toast.style">
+        <p>{{ toast.message }}</p>
+      </article>
+    </header>
+    <div class="site-body">
+      <nav v-if="isLoggedIn">
+        <ul>
+          <li>
+            <RouterLink :to="{ name: 'Nexus' }" :class="{ underline: currentRouteName == 'Nexus' }"> Nexus </RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'Search' }" :class="{ underline: currentRouteName == 'Search' }"> Search </RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'Screen Time Report' }" :class="{ underline: currentRouteName == 'Screen Time Report' }"> Screen Time Report </RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'Create Post' }" :class="{ underline: currentRouteName == 'Create Post' }"> Post </RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
+          </li>
+        </ul>
+      </nav>
+      <div class="site-view">
+        <RouterView />
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
 @import "./assets/toast.css";
 
-nav {
-  padding: 1em 2em;
-  background-color: lightgray;
+.app-page {
+  height: 100vh;
+}
+
+header {
+  border-bottom: solid;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 1em 2em;
+}
+
+nav {
+  padding: 1em 2em;
+  border-right: solid;
+  height: 100%;
+}
+
+nav > ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 h1 {
   font-size: 2em;
   margin: 0;
+}
+
+.site-body {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.site-view {
+  width: 100%;
+  height: 100%;
 }
 
 .title {

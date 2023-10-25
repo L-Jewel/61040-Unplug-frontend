@@ -2,10 +2,14 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
+import CreatePostView from "../views/CreatePostView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import ScreenTimeReport from "../views/ScreenTimeReportView.vue";
+import SearchView from "../views/SearchView.vue";
 import SettingView from "../views/SettingView.vue";
+import NexusView from "../views/NexusView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -19,6 +23,30 @@ const router = createRouter({
       path: "/setting",
       name: "Settings",
       component: SettingView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/nexus",
+      name: "Nexus",
+      component: NexusView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/search",
+      name: "Search",
+      component: SearchView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/post",
+      name: "Create Post",
+      component: CreatePostView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/screen-time-report",
+      name: "Screen Time Report",
+      component: ScreenTimeReport,
       meta: { requiresAuth: true },
     },
     {
