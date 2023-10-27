@@ -5,6 +5,16 @@
   --base-bg: #f1f3f5;
 }
 
+#action-btn {
+  background-color: #bbdefb;
+  font-weight: bold;
+}
+
+#delete-btn {
+  background-color: #ffcdd2;
+  font-weight: bold;
+}
+
 button.btn-small {
   font-size: 80%;
 }

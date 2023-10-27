@@ -35,6 +35,7 @@ const addTag = async () => {
     return;
   }
   addingTag.value = false;
+  tagToAdd.value = "";
   await getTags();
 };
 
@@ -64,7 +65,7 @@ onBeforeMount(async () => {
     </article>
     <v-btn icon="mdi-plus" size="x-small" variant="outlined" @click="startEditing" v-if="props.post.author == currentUsername && !addingTag" />
     <input v-if="addingTag" v-model="tagToAdd" />
-    <button class="btn-small pure-button" @click="addTag" v-if="addingTag">Add Tag</button>
+    <button class="btn-small pure-button" id="action-btn" @click="addTag" v-if="addingTag">Add Tag</button>
   </section>
   <v-progress-linear v-else color="primary" indeterminate />
 </template>
@@ -83,5 +84,8 @@ article {
   gap: 0.5rem;
   border-radius: 2rem;
   padding: 0rem 0.75rem;
+}
+input {
+  border: solid 0.1em;
 }
 </style>

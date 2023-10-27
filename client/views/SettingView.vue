@@ -23,7 +23,7 @@ async function delete_() {
     <article>
       <h1>Settings for {{ currentUsername }}</h1>
       <UpdateUserForm />
-      <button class="button-error pure-button" @click="delete_">Delete User</button>
+      <v-btn variant="text" id="delete-btn" @click="delete_">Delete User</v-btn>
     </article>
   </main>
 </template>

@@ -30,8 +30,8 @@ async function override() {
       <p>Now is an excellent time to unwind, go for a walk, or meet up with a friend.</p>
     </div>
     <div id="limit-btn-group">
-      <v-btn @click="logout" :loading="isLoadingLogout" prepend-icon="mdi-power-plug">Unplug</v-btn>
-      <v-btn @click="override" :loading="isLoadingOverride" prepend-icon="mdi-link-variant">Override Limit</v-btn>
+      <v-btn @click="logout" id="unplug-btn" color="primary" variant="tonal" :loading="isLoadingLogout" prepend-icon="mdi-power-plug">Unplug</v-btn>
+      <v-btn @click="override" id="delete-btn" variant="text" :loading="isLoadingOverride" prepend-icon="mdi-link-variant">Override Limit</v-btn>
     </div>
   </main>
 </template>
@@ -44,6 +44,10 @@ main {
   gap: 30%;
   /* justify-content: space-between; */
   height: 100%;
+}
+
+#unplug-btn {
+  font-weight: bold;
 }
 
 #limit-btn-group {

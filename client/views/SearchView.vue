@@ -34,7 +34,7 @@ const searchUsers = async () => {
     <div class="searchbar">
       <v-text-field prepend-inner-icon="mdi-magnify" v-model="searchQuery" variant="outlined">
         <template v-slot:append>
-          <v-btn @click="searchUsers" :loading="isLoadingResults" variant="tonal">Search</v-btn>
+          <v-btn @click="searchUsers" id="action-btn" :loading="isLoadingResults" variant="text">Search</v-btn>
         </template>
       </v-text-field>
     </div>
@@ -60,5 +60,9 @@ main {
 
 article {
   padding: 1em;
+}
+
+article > * {
+  color: black;
 }
 </style>

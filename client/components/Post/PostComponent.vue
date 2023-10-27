@@ -34,10 +34,12 @@ const viewRelatedPosts = async () => {
 <template>
   <div class="post-box">
     <div class="titlebar">
-      <p class="author">{{ props.post.author }}</p>
+      <RouterLink :to="{ name: 'Explore', params: { username: props.post.author } }">
+        <p class="author">{{ props.post.author }}</p>
+      </RouterLink>
       <menu v-if="props.post.author == currentUsername">
-        <li><v-btn prepend-icon="mdi-pencil" size="small" variant="tonal" @click="emit('editPost', props.post._id)">Edit</v-btn></li>
-        <li><v-btn :loading="isLoadingDelete" prepend-icon="mdi-trash-can" size="small" variant="tonal" @click="deletePost">Delete</v-btn></li>
+        <li><v-btn prepend-icon="mdi-pencil" id="action-btn" size="small" variant="text" @click="emit('editPost', props.post._id)">Edit</v-btn></li>
+        <li><v-btn :loading="isLoadingDelete" id="delete-btn" prepend-icon="mdi-trash-can" size="small" variant="tonal" @click="deletePost">Delete</v-btn></li>
       </menu>
       <menu v-else>
         <li><v-btn v-if="currentRoute.name !== 'Related Posts'" @click="viewRelatedPosts" prepend-icon="mdi-access-point" variant="outlined" size="small">View Related Content</v-btn></li>
@@ -74,6 +76,7 @@ p {
 .author {
   font-weight: bold;
   font-size: 1.2em;
+  color: black;
 }
 
 menu {

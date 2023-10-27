@@ -54,7 +54,7 @@ onBeforeMount(async () => {
     <article v-for="limit of quietHours" :key="limit">
       <QuietHourComponent :limit="limit" @refreshLimits="getQuietHours" />
     </article>
-    <v-btn v-if="!isCreating" @click="() => (isCreating = true)" id="form-submit" variant="tonal">Create a new quiet hour</v-btn>
+    <v-btn v-if="!isCreating" color="primary" @click="() => (isCreating = true)" id="form-submit" variant="tonal">Create a new quiet hour</v-btn>
   </section>
   <v-progress-linear v-else color="primary" indeterminate />
   <form v-if="isCreating" @submit.prevent="createQuietHour(startTime, endTime)">
@@ -63,7 +63,7 @@ onBeforeMount(async () => {
       <v-text-field required type="time" label="Start Time" variant="outlined" v-model="startTime" />
       <v-text-field required type="time" label="End Time" variant="outlined" v-model="endTime" />
     </div>
-    <v-btn :loading="isLoading" type="submit" id="form-submit" variant="tonal">Create</v-btn>
+    <v-btn :loading="isLoading" color="primary" type="submit" id="form-submit" variant="tonal">Create</v-btn>
   </form>
 </template>
 

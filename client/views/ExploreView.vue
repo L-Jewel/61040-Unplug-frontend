@@ -2,8 +2,11 @@
 import { defineProps, onBeforeMount, ref } from "vue";
 import PostListComponent from "../components/Post/PostListComponent.vue";
 import router from "../router";
+import { useUserStore } from "../stores/user";
 import { fetchy } from "../utils/fetchy";
 
+const userStore = useUserStore();
+const { currentUsername } = userStore;
 const props = defineProps(["username"]);
 const user = ref();
 const loaded = ref(false);
@@ -34,6 +37,7 @@ const watchUser = async () => {
   try {
     await fetchy(`/api/watch`, "POST", { body: { watched_id: user.value._id } });
   } catch {
+    isLoadingWatch.value = false;
     return;
   }
   await getIsWatchingUser();
@@ -43,6 +47,7 @@ const stopWatchingUser = async () => {
   isLoadingWatch.value = true;
   try {
     await fetchy(`/api/watch/${user.value._id}`, "DELETE");
+    isLoadingWatch.value = false;
   } catch {
     return;
   }
@@ -70,8 +75,10 @@ onBeforeMount(async () => {
   <main v-if="loaded">
     <div class="account-header">
       <h1>{{ user.username }}</h1>
-      <v-btn v-if="isWatching" @click="stopWatchingUser" :loading="isLoadingWatch" prepend-icon="mdi-bell-outline" rounded="xl" variant="tonal">Watching</v-btn>
-      <v-btn v-else @click="watchUser" :loading="isLoadingWatch" prepend-icon="mdi-bell-outline" rounded="xl" variant="tonal">Watch</v-btn>
+      <div v-if="currentUsername !== user.username">
+        <v-btn v-if="isWatching" id="action-btn" @click="stopWatchingUser" :loading="isLoadingWatch" prepend-icon="mdi-bell-outline" rounded="xl" variant="text">Watching</v-btn>
+        <v-btn v-else @click="watchUser" id="action-btn" :loading="isLoadingWatch" prepend-icon="mdi-bell-outline" rounded="xl" variant="text">Watch</v-btn>
+      </div>
     </div>
     <PostListComponent :posts="posts" />
   </main>

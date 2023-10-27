@@ -33,7 +33,7 @@ async function login() {
         <input type="password" v-model.trim="password" id="aligned-password" placeholder="Password" required />
       </div>
       <div class="pure-controls">
-        <v-btn :loading="isLoading" variant="tonal" type="submit">Submit</v-btn>
+        <v-btn :loading="isLoading" variant="text" id="action-btn" type="submit">Submit</v-btn>
       </div>
     </fieldset>
   </form>

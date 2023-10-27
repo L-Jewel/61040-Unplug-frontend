@@ -42,9 +42,9 @@ onBeforeMount(async () => {
         </RouterLink>
       </div>
       <TimeCheckComponent v-if="isLoggedIn" />
-      <v-btn v-if="isLoggedIn" @click="logout" :loading="isLoading" variant="tonal">Logout</v-btn>
+      <v-btn v-if="isLoggedIn" color="primary" @click="logout" :loading="isLoading" variant="tonal">Logout</v-btn>
       <RouterLink v-else :to="{ name: 'Login' }">
-        <v-btn variant="tonal"> Login </v-btn>
+        <v-btn variant="tonal" color="primary"> Login </v-btn>
       </RouterLink>
       <article v-if="toast !== null" class="toast" :class="toast.style">
         <p>{{ toast.message }}</p>
@@ -53,22 +53,22 @@ onBeforeMount(async () => {
     <div class="site-body">
       <nav v-if="isLoggedIn && !isUserLimited">
         <ul>
-          <li>
+          <li :class="{ selectedNav: currentRouteName == 'Nexus' }">
             <RouterLink :to="{ name: 'Nexus' }" :class="{ underline: currentRouteName == 'Nexus' }"> Nexus </RouterLink>
           </li>
-          <li>
+          <li :class="{ selectedNav: currentRouteName == 'Search' }">
             <RouterLink :to="{ name: 'Search' }" :class="{ underline: currentRouteName == 'Search' }"> Search </RouterLink>
           </li>
-          <li>
+          <li :class="{ selectedNav: currentRouteName == 'Screen Time Report' }">
             <RouterLink :to="{ name: 'Screen Time Report' }" :class="{ underline: currentRouteName == 'Screen Time Report' }"> Screen Time Report </RouterLink>
           </li>
-          <li>
+          <li :class="{ selectedNav: currentRouteName == 'Create Post' }">
             <RouterLink :to="{ name: 'Create Post' }" :class="{ underline: currentRouteName == 'Create Post' }"> Post </RouterLink>
           </li>
-          <li>
+          <li :class="{ selectedNav: currentRouteName == 'Profile' }">
             <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }"> Profile </RouterLink>
           </li>
-          <li>
+          <li :class="{ selectedNav: currentRouteName == 'Settings' }">
             <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
           </li>
         </ul>
@@ -82,12 +82,16 @@ onBeforeMount(async () => {
 
 <style scoped>
 @import "./assets/toast.css";
-
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap");
+body {
+  font-family: "Comic Neue", cursive;
+}
 .app-page {
   display: flex;
   flex-direction: column;
   max-height: 100%;
   height: 100vh;
+  font-family: "Comic Neue", cursive;
 }
 
 header {
@@ -99,16 +103,27 @@ header {
 }
 
 nav {
-  padding: 1em 2em;
   border-right: solid;
   height: 100%;
   min-height: 100%;
+  padding-top: 1em;
 }
 
 nav > ul {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: stretch;
+  gap: 0;
+}
+
+nav > ul > li {
+  padding: 0.5em 2em;
+  width: 100%;
+}
+
+.selectedNav {
+  background-color: rgb(235, 223, 252);
 }
 
 h1 {
@@ -155,6 +170,7 @@ ul {
 }
 
 .underline {
-  text-decoration: underline;
+  font-weight: bold;
+  color: rgb(122, 40, 240);
 }
 </style>

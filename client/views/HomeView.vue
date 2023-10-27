@@ -4,7 +4,7 @@
   <main>
     <h1>Welcome to Unplug!</h1>
     <RouterLink :to="{ name: 'Login' }">
-      <v-btn variant="tonal" size="x-large"> Login </v-btn>
+      <v-btn color="primary" variant="tonal" size="x-large"> Login </v-btn>
     </RouterLink>
   </main>
 </template>

@@ -32,13 +32,12 @@ const emptyForm = () => {
     <label for="content">Post Contents:</label>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
     <v-combobox prepend-inner-icon="mdi-tag" v-model="tags" variant="outlined" multiple chips></v-combobox>
-    <v-btn :loading="loading" variant="tonal" type="submit">Create Post</v-btn>
+    <v-btn :loading="loading" id="action-btn" variant="text" type="submit">Create Post</v-btn>
   </form>
 </template>
 
 <style scoped>
 form {
-  /* background-color: var(--base-bg); */
   border-radius: 1em;
   display: flex;
   flex-direction: column;
