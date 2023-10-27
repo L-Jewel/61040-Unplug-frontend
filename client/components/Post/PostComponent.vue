@@ -4,12 +4,16 @@ import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import { useRoute } from "vue-router";
+import router from "../../router";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refresh"]);
 const { currentUsername } = storeToRefs(useUserStore());
 const isLoadingDelete = ref(false);
+
+const currentRoute = useRoute();
 
 const deletePost = async () => {
   isLoadingDelete.value = true;
@@ -20,6 +24,10 @@ const deletePost = async () => {
   }
   isLoadingDelete.value = false;
   emit("refresh");
+};
+
+const viewRelatedPosts = async () => {
+  void router.push({ name: "Related Posts", params: { post: props.post._id } });
 };
 </script>
 
@@ -32,7 +40,7 @@ const deletePost = async () => {
         <li><v-btn :loading="isLoadingDelete" prepend-icon="mdi-trash-can" size="small" variant="tonal" @click="deletePost">Delete</v-btn></li>
       </menu>
       <menu v-else>
-        <li><button class="btn-small pure-button">View Related Content</button></li>
+        <li><v-btn v-if="currentRoute.name !== 'Related Posts'" @click="viewRelatedPosts" prepend-icon="mdi-access-point" variant="outlined" size="small">View Related Content</v-btn></li>
       </menu>
     </div>
     <p>{{ props.post.content }}</p>

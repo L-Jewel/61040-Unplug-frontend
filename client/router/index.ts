@@ -10,6 +10,7 @@ import LoginView from "../views/LoginView.vue";
 import NexusView from "../views/NexusView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import RelatedPostsView from "../views/RelatedPostsView.vue";
 import ScreenTimeReport from "../views/ScreenTimeReportView.vue";
 import SearchView from "../views/SearchView.vue";
 import SettingView from "../views/SettingView.vue";
@@ -74,6 +75,13 @@ const router = createRouter({
       path: "/explore/:username(.*)",
       name: "Explore",
       component: ExploreView,
+      meta: { requiresAuth: true },
+      props: true,
+    },
+    {
+      path: "/related-posts/:post(.*)",
+      name: "Related Posts",
+      component: RelatedPostsView,
       meta: { requiresAuth: true },
       props: true,
     },

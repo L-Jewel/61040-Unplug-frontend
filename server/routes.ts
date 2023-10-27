@@ -120,6 +120,10 @@ class Routes {
     // Delete the posts themselves
     return Post.delete(_id);
   }
+  @Router.get("/posts/:_id")
+  async getPost(_id: ObjectId) {
+    return await Post.getPost(_id);
+  }
   @Router.get("/posts/:_id/tags")
   async getPostTags(_id: ObjectId) {
     return await Tag.getItemTags(new ObjectId(_id));

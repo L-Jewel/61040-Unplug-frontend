@@ -20,7 +20,6 @@ async function getPosts() {
   }
   posts.value = postResults;
 }
-
 const getUser = async () => {
   try {
     const userResult = await fetchy(`/api/users/${props.username}`, "GET");
@@ -30,7 +29,6 @@ const getUser = async () => {
     return;
   }
 };
-
 const watchUser = async () => {
   isLoadingWatch.value = true;
   try {
@@ -41,7 +39,6 @@ const watchUser = async () => {
   await getIsWatchingUser();
   isLoadingWatch.value = false;
 };
-
 const stopWatchingUser = async () => {
   isLoadingWatch.value = true;
   try {
@@ -52,7 +49,6 @@ const stopWatchingUser = async () => {
   await getIsWatchingUser();
   isLoadingWatch.value = false;
 };
-
 const getIsWatchingUser = async () => {
   try {
     const isWatchingResult = await fetchy(`/api/watch/${user.value._id}`, "GET");
