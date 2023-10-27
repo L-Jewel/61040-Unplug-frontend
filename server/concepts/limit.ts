@@ -104,7 +104,7 @@ export default class LimitConcept {
 
   async getNextLimitStart(user: ObjectId) {
     const userLimits = await this.getLimits(user);
-    if (userLimits) {
+    if (userLimits && userLimits.length > 0) {
       const currentTime = new Date();
       const currentHour = currentTime.getHours();
       const currentMinute = currentTime.getMinutes();
@@ -116,7 +116,7 @@ export default class LimitConcept {
       }
       return { hour: userLimits[0].hourStart, minute: userLimits[0].minuteStart };
     }
-    return { msg: `${user} has no limits` };
+    return;
   }
 
   async isCreator(user: ObjectId, _id: ObjectId) {

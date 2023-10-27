@@ -60,12 +60,13 @@ onBeforeMount(async () => {
   <section v-if="loaded">
     <article v-for="tag in tags" :key="tag">
       #{{ tag }}
-      <button v-if="props.post.author == currentUsername" @click="deleteTag(tag)" class="btn-icon pure-button">x</button>
+      <v-btn icon="mdi-close" size="x-small" variant="text" v-if="props.post.author == currentUsername" @click="deleteTag(tag)" class="btn-icon pure-button" />
     </article>
-    <button class="btn-small pure-button" @click="startEditing" v-if="props.post.author == currentUsername && !addingTag">+</button>
+    <v-btn icon="mdi-plus" size="x-small" variant="outlined" @click="startEditing" v-if="props.post.author == currentUsername && !addingTag" />
     <input v-if="addingTag" v-model="tagToAdd" />
     <button class="btn-small pure-button" @click="addTag" v-if="addingTag">Add Tag</button>
   </section>
+  <v-progress-linear v-else color="primary" indeterminate />
 </template>
 
 <style scoped>
@@ -73,9 +74,11 @@ section {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  align-items: center;
 }
 article {
   display: flex;
+  align-items: center;
   border: solid;
   gap: 0.5rem;
   border-radius: 2rem;

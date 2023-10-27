@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import SetQuietHoursForm from "@/components/Limit/SetQuietHoursForm.vue";
+import UpdateUserForm from "@/components/Setting/UpdateUserForm.vue";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import UpdateUserForm from "../components/Setting/UpdateUserForm.vue";
 
 const { currentUsername } = storeToRefs(useUserStore());
 const { deleteUser } = useUserStore();
@@ -14,9 +15,33 @@ async function delete_() {
 </script>
 
 <template>
-  <main class="column">
-    <h1>Settings for {{ currentUsername }}</h1>
-    <UpdateUserForm />
-    <button class="button-error pure-button" @click="delete_">Delete User</button>
+  <main>
+    <article>
+      <h1>Quiet Hours</h1>
+      <SetQuietHoursForm />
+    </article>
+    <article>
+      <h1>Settings for {{ currentUsername }}</h1>
+      <UpdateUserForm />
+      <button class="button-error pure-button" @click="delete_">Delete User</button>
+    </article>
   </main>
 </template>
+
+<style scoped>
+main {
+  display: flex;
+  flex-direction: column;
+  margin: 1em;
+  gap: 1em;
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+article {
+  border: solid;
+  padding: 0 1em 1em 1em;
+}
+</style>

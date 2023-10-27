@@ -2,52 +2,50 @@
 import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
 import { ref } from "vue";
+import router from "../../router";
+import { useUserStore } from "../../stores/user";
 
-// const loaded = ref(false);
 const props = defineProps(["posts"]);
-// let posts = ref<Array<Record<string, string>>>([]);
+const emit = defineEmits(["refreshPosts"]);
+const postList = ref(props.posts);
+const isLoading = ref(false);
 let editing = ref("");
-// let searchAuthor = ref("");
 
-// async function getPosts(author?: string) {
-//   let query: Record<string, string> = author !== undefined ? { author } : {};
-//   let postResults;
-//   try {
-//     postResults = await fetchy("/api/posts", "GET", { query });
-//   } catch (_) {
-//     return;
-//   }
-//   searchAuthor.value = author ? author : "";
-//   posts.value = postResults;
-// }
+const userStore = useUserStore();
+
+async function logout() {
+  isLoading.value = true;
+  await userStore.logoutUser();
+  void router.push({ name: "Home" });
+  isLoading.value = false;
+}
+
+function refreshPosts() {
+  emit("refreshPosts");
+}
 
 function updateEditing(id: string) {
   editing.value = id;
 }
-
-// onBeforeMount(async () => {
-//   await getPosts();
-//   loaded.value = true;
-// });
 </script>
 
 <template>
-  <!-- <section v-if="isLoggedIn">
-    <h2>Create a post:</h2>
-    <CreatePostForm @refreshPosts="getPosts" />
-  </section> -->
-  <!-- <div class="row">
-    <h2 v-if="!searchAuthor">Posts:</h2>
-    <h2 v-else>Posts by {{ searchAuthor }}:</h2>
-    <SearchPostForm @getPostsByAuthor="getPosts" />
-  </div> -->
   <section class="posts" v-if="props.posts.length !== 0">
-    <article v-for="post in props.posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @editPost="updateEditing" />
+    <article v-for="post in postList" :key="post._id">
+      <PostComponent v-if="editing !== post._id" :post="post" @refresh="refreshPosts" @editPost="updateEditing" />
       <EditPostForm v-else :post="post" @editPost="updateEditing" />
     </article>
+    <div class="prompt-unplug">
+      <p>You're all caught up!</p>
+      <v-btn @click="logout" :loading="isLoading" variant="tonal">Unplug?</v-btn>
+    </div>
   </section>
-  <p v-else>No posts found</p>
+  <section v-else>
+    <div class="prompt-unplug">
+      <p>No updates since you last logged in!</p>
+      <v-btn @click="logout" :loading="isLoading" variant="tonal">Unplug?</v-btn>
+    </div>
+  </section>
 </template>
 
 <style scoped>
@@ -64,6 +62,17 @@ p,
   max-width: 60em;
 }
 
+.prompt-unplug {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+}
+
+.prompt-unplug > p {
+  margin: 0;
+}
+
 article {
   /* background-color: var(--base-bg); */
   border-style: solid;
@@ -75,7 +84,7 @@ article {
 }
 
 .posts {
-  padding: 1em;
+  padding: 0 1em;
 }
 
 .row {

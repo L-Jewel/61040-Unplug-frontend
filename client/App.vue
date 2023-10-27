@@ -1,21 +1,24 @@
 <script setup lang="ts">
+import TimeCheckComponent from "@/components/Limit/TimeCheckComponent.vue";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { computed, onBeforeMount } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import router from "./router";
 
+const isLoading = ref(false);
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
 const userStore = useUserStore();
-const { isLoggedIn } = storeToRefs(userStore);
+const { isLoggedIn, isUserLimited } = storeToRefs(userStore);
 const { toast } = storeToRefs(useToastStore());
-// const { logoutUser } = useUserStore();
 
 async function logout() {
+  isLoading.value = true;
   await userStore.logoutUser();
   void router.push({ name: "Home" });
+  isLoading.value = false;
 }
 
 // Make sure to update the session before mounting the app in case the user is already logged in
@@ -38,16 +41,17 @@ onBeforeMount(async () => {
           <h1>Unplug</h1>
         </RouterLink>
       </div>
-      <v-btn v-if="isLoggedIn" @click="logout" variant="tonal">Logout</v-btn>
-      <RouterLink v-else :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }">
-        <v-btn variant="tonal">Login</v-btn>
+      <TimeCheckComponent v-if="isLoggedIn" />
+      <v-btn v-if="isLoggedIn" @click="logout" :loading="isLoading" variant="tonal">Logout</v-btn>
+      <RouterLink v-else :to="{ name: 'Login' }">
+        <v-btn variant="tonal"> Login </v-btn>
       </RouterLink>
       <article v-if="toast !== null" class="toast" :class="toast.style">
         <p>{{ toast.message }}</p>
       </article>
     </header>
     <div class="site-body">
-      <nav v-if="isLoggedIn">
+      <nav v-if="isLoggedIn && !isUserLimited">
         <ul>
           <li>
             <RouterLink :to="{ name: 'Nexus' }" :class="{ underline: currentRouteName == 'Nexus' }"> Nexus </RouterLink>
@@ -60,6 +64,9 @@ onBeforeMount(async () => {
           </li>
           <li>
             <RouterLink :to="{ name: 'Create Post' }" :class="{ underline: currentRouteName == 'Create Post' }"> Post </RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }"> Profile </RouterLink>
           </li>
           <li>
             <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
@@ -114,6 +121,7 @@ h1 {
 .site-view {
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
 }
 
 .title {

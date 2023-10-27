@@ -5,8 +5,10 @@ import { fetchy } from "../../utils/fetchy";
 const content = ref("");
 const tags = ref([]);
 const emit = defineEmits(["refreshPosts"]);
+const loading = ref(false);
 
 const createPost = async (content: string, tags: string[]) => {
+  loading.value = true;
   try {
     await fetchy("/api/posts", "POST", {
       body: { content, tags },
@@ -16,6 +18,7 @@ const createPost = async (content: string, tags: string[]) => {
   }
   emit("refreshPosts");
   emptyForm();
+  loading.value = false;
 };
 
 const emptyForm = () => {
@@ -28,19 +31,20 @@ const emptyForm = () => {
   <form @submit.prevent="createPost(content, tags)">
     <label for="content">Post Contents:</label>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
-    <v-combobox v-model="tags" multiple chips></v-combobox>
-    <button type="submit" class="pure-button-primary pure-button">Create Post</button>
+    <v-combobox prepend-inner-icon="mdi-tag" v-model="tags" variant="outlined" multiple chips></v-combobox>
+    <v-btn :loading="loading" variant="tonal" type="submit">Create Post</v-btn>
   </form>
 </template>
 
 <style scoped>
 form {
-  background-color: var(--base-bg);
+  /* background-color: var(--base-bg); */
   border-radius: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
+  border: solid;
 }
 
 textarea {

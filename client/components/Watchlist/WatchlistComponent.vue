@@ -33,10 +33,13 @@ onBeforeMount(async () => {
 <template>
   <div class="watchlist">
     <h1>Watchlist</h1>
-    <div class="watched-user" v-for="watched in watchlist" :key="watched">
-      <p>{{ watched }}</p>
-      <v-btn icon="mdi-close" variant="text" size="small" @click="stopWatchingUser(watched)" />
+    <div v-if="loaded">
+      <div class="watched-user" v-for="watched in watchlist" :key="watched">
+        <p>{{ watched }}</p>
+        <v-btn icon="mdi-close" variant="text" size="small" @click="stopWatchingUser(watched)" />
+      </div>
     </div>
+    <v-progress-linear v-else color="primary" indeterminate />
   </div>
 </template>
 
@@ -45,6 +48,7 @@ onBeforeMount(async () => {
   border: solid;
   display: flex;
   flex-direction: column;
+  margin: 1em 1em;
 }
 
 h1 {

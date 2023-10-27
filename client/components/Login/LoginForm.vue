@@ -5,12 +5,18 @@ import { ref } from "vue";
 
 const username = ref("");
 const password = ref("");
+const isLoading = ref(false);
 const { loginUser, updateSession } = useUserStore();
 
 async function login() {
-  await loginUser(username.value, password.value);
-  void updateSession();
-  void router.push({ name: "Home" });
+  isLoading.value = true;
+  try {
+    await loginUser(username.value, password.value);
+    await updateSession();
+    await router.push({ name: "Nexus" });
+  } catch {
+    isLoading.value = false;
+  }
 }
 </script>
 
@@ -27,7 +33,7 @@ async function login() {
         <input type="password" v-model.trim="password" id="aligned-password" placeholder="Password" required />
       </div>
       <div class="pure-controls">
-        <button type="submit" class="pure-button pure-button-primary">Submit</button>
+        <v-btn :loading="isLoading" variant="tonal" type="submit">Submit</v-btn>
       </div>
     </fieldset>
   </form>

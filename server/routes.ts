@@ -9,6 +9,8 @@ import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
 import Responses from "./responses";
 
+import { UserLimitedError } from "./concepts/limit";
+
 class Routes {
   // User + Authentication Methods
   @Router.get("/session")
@@ -207,6 +209,18 @@ class Routes {
     const user = WebSession.getUser(session);
     return Limit.getNextLimitStart(user);
   }
+  @Router.get("/limits/status")
+  async isUserLimited(session: WebSessionDoc) {
+    const user = WebSession.getUser(session);
+    try {
+      await Limit.isUserLimited(user);
+      return false;
+    } catch (error) {
+      if (error instanceof UserLimitedError) {
+        return true;
+      }
+    }
+  }
   @Router.post("/limits/override")
   async overrideLimit(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
@@ -234,9 +248,9 @@ class Routes {
 
     const watchlist = await Watching.getWatchlist(user);
     const lastLogin = await ScreenTime.getLastStart(user);
-    const feed = [];
+    let feed: PostDoc[] = [];
     for (const watched of watchlist) {
-      feed.push(await Post.getByAuthor(new ObjectId(watched), lastLogin));
+      feed = feed.concat(await Post.getByAuthor(new ObjectId(watched), lastLogin));
     }
     return feed;
   }

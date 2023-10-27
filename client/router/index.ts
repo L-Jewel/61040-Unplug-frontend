@@ -4,12 +4,14 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import CreatePostView from "../views/CreatePostView.vue";
 import HomeView from "../views/HomeView.vue";
+import LimitView from "../views/LimitView.vue";
 import LoginView from "../views/LoginView.vue";
+import NexusView from "../views/NexusView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import ProfileView from "../views/ProfileView.vue";
 import ScreenTimeReport from "../views/ScreenTimeReportView.vue";
 import SearchView from "../views/SearchView.vue";
 import SettingView from "../views/SettingView.vue";
-import NexusView from "../views/NexusView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -44,6 +46,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/profile",
+      name: "Profile",
+      component: ProfileView,
+      meta: { requriesAuth: true },
+    },
+    {
       path: "/screen-time-report",
       name: "Screen Time Report",
       component: ScreenTimeReport,
@@ -62,6 +70,12 @@ const router = createRouter({
       },
     },
     {
+      path: "/limited",
+      name: "Limit",
+      component: LimitView,
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/:catchAll(.*)",
       name: "not-found",
       component: NotFoundView,
@@ -73,10 +87,14 @@ const router = createRouter({
  * Navigation guards to prevent user from accessing wrong pages.
  */
 router.beforeEach((to, from) => {
-  const { isLoggedIn } = storeToRefs(useUserStore());
+  const { isLoggedIn, isUserLimited } = storeToRefs(useUserStore());
 
   if (to.meta.requiresAuth && !isLoggedIn.value) {
     return { name: "Login" };
+  } else if (to.name !== "Limit" && isLoggedIn.value && isUserLimited.value) {
+    return { name: "Limit" };
+  } else if (to.name === "Login" && isLoggedIn.value) {
+    return { name: "Nexus" };
   }
 });
 

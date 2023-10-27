@@ -39,11 +39,15 @@ onBeforeMount(async () => {
 <template>
   <main>
     <Line v-if="loaded" :data="reportData" />
+    <v-progress-circular v-else color="primary" indeterminate />
   </main>
 </template>
 
 <style scoped>
 main {
   padding: 1em 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
+import PostListComponent from "@/components/Post/PostListComponent.vue";
 import WatchlistComponent from "@/components/Watchlist/WatchlistComponent.vue";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../utils/fetchy";
 
 let loaded = ref(false);
-let posts = ref<Array<Record<string, string>>>([]);
+let posts = ref([]);
 
 async function getFeed() {
   let postResults;
   try {
     postResults = await fetchy("/api/feed", "GET");
   } catch (_) {
-    console.log("error!");
     return;
   }
   posts.value = postResults;
@@ -19,14 +19,16 @@ async function getFeed() {
 
 onBeforeMount(async () => {
   await getFeed();
-  console.log(posts.value);
   loaded.value = true;
 });
 </script>
 
 <template>
   <main>
-    <div class="nexus-feed"><PostListComponent v-if="loaded" :posts="posts" /></div>
+    <div class="nexus-feed">
+      <PostListComponent v-if="loaded" :posts="posts" />
+      <v-progress-circular v-else color="primary" indeterminate />
+    </div>
     <div class="nexus-watchlist">
       <WatchlistComponent />
     </div>
@@ -41,6 +43,10 @@ main {
 
 main .nexus-feed {
   flex-basis: 66.66%;
+  display: flex;
+  /* align-items: center; */
+  margin: 1em 0;
+  justify-content: center;
 }
 
 main .nexus-watchlist {
