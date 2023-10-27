@@ -19,9 +19,15 @@ async function getRelatedPosts() {
     relatedPostsIDs = relatedPostsIDs.concat(taggedPosts);
   }
   const relatedPostsList = [];
+  const relatedPostsSet = new Set<string>();
   for (const relatedPost of relatedPostsIDs.slice(0, 10)) {
     try {
-      relatedPostsList.push(await fetchy(`/api/posts/${relatedPost}`, "GET"));
+      const postResult = await fetchy(`/api/posts/${relatedPost}`, "GET");
+      // Prevent duplicates
+      if (!relatedPostsSet.has(postResult._id)) {
+        relatedPostsList.push(postResult);
+        relatedPostsSet.add(postResult._id);
+      }
     } catch {
       continue;
     }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import router from "../router";
 import { useUserStore } from "../stores/user";
@@ -8,7 +7,6 @@ const isLoadingLogout = ref(false);
 const isLoadingOverride = ref(false);
 
 const userStore = useUserStore();
-const { isUserLimited } = storeToRefs(userStore);
 
 async function logout() {
   isLoadingLogout.value = true;

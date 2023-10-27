@@ -36,7 +36,7 @@ onBeforeMount(async () => {
     <header>
       <h1 v-if="isLoggedIn">{{ currentRouteName }}</h1>
       <div v-else class="title">
-        <img src="@/assets/images/logo.svg" />
+        <v-icon size="x-large" icon="mdi-power-plug-outline" />
         <RouterLink :to="{ name: 'Home' }">
           <h1>Unplug</h1>
         </RouterLink>
@@ -84,6 +84,9 @@ onBeforeMount(async () => {
 @import "./assets/toast.css";
 
 .app-page {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
   height: 100vh;
 }
 
@@ -99,6 +102,7 @@ nav {
   padding: 1em 2em;
   border-right: solid;
   height: 100%;
+  min-height: 100%;
 }
 
 nav > ul {
@@ -116,12 +120,13 @@ h1 {
   display: flex;
   height: 100%;
   width: 100%;
+  max-height: 100%;
 }
 
 .site-view {
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
+  max-height: 100%;
 }
 
 .title {

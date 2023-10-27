@@ -5,7 +5,8 @@ import router from "../../router";
 import { useUserStore } from "../../stores/user";
 import { fetchy } from "../../utils/fetchy";
 
-const { limitUser, isLoggedIn } = useUserStore();
+const userStore = useUserStore();
+const { limitUser } = userStore;
 
 const currentTime = ref("");
 const nextLimitHourStart = ref();
@@ -62,13 +63,13 @@ async function getNextLimit() {
 }
 
 setInterval(async () => {
-  if (isLoggedIn) {
+  if (userStore.isLoggedIn) {
     await updateTime();
   }
 }, 5000);
 
 setInterval(async () => {
-  if (isLoggedIn) {
+  if (userStore.isLoggedIn) {
     await getNextLimit();
   }
 }, 10000);
