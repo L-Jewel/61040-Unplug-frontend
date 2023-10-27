@@ -33,7 +33,7 @@ export default class WatchingConcept {
     return allWatched.map((watching) => watching.watched);
   }
 
-  private async isWatching(watcher: ObjectId, watched: ObjectId): Promise<boolean> {
+  async isWatching(watcher: ObjectId, watched: ObjectId): Promise<boolean> {
     const watching = await this.watching.readOne({ watcher, watched });
     return !(watching === null);
   }

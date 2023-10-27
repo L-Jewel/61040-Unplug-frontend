@@ -180,6 +180,13 @@ class Routes {
     await Limit.isUserLimited(watcher);
     return await Watching.stopWatching(watcher, watched);
   }
+  @Router.get("/watch/:watched")
+  async isWatchingUser(session: WebSessionDoc, watched: ObjectId) {
+    // Check if the user is Limited
+    const watcher = WebSession.getUser(session);
+    await Limit.isUserLimited(watcher);
+    return await Watching.isWatching(watcher, watched);
+  }
 
   // Limit Methods
   @Router.get("/limits")

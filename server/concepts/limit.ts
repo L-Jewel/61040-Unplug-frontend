@@ -90,6 +90,7 @@ export default class LimitConcept {
           if (currentMinute >= userLimit.minuteStart && currentMinute < userLimit.minuteEnd) {
             throw new UserLimitedError(user);
           }
+          return;
         }
         if (currentHour == userLimit.hourStart && currentMinute >= userLimit.minuteStart) {
           throw new UserLimitedError(user);
@@ -111,10 +112,20 @@ export default class LimitConcept {
       for (let i = 0; i < userLimits.length; i++) {
         const currLimit = userLimits[i];
         if (currentHour < currLimit.hourStart || (currentHour == currLimit.hourStart && currentMinute < currLimit.minuteStart)) {
-          return { hour: currLimit.hourStart, minute: currLimit.minuteStart };
+          return {
+            hourStart: currLimit.hourStart,
+            minuteStart: currLimit.minuteStart,
+            hourEnd: currLimit.hourEnd,
+            minuteEnd: currLimit.minuteEnd,
+          };
         }
       }
-      return { hour: userLimits[0].hourStart, minute: userLimits[0].minuteStart };
+      return {
+        hourStart: userLimits[0].hourStart,
+        minuteStart: userLimits[0].minuteStart,
+        hourEnd: userLimits[0].hourEnd,
+        minuteEnd: userLimits[0].minuteEnd,
+      };
     }
     return;
   }

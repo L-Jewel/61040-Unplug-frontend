@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
 import CreatePostView from "../views/CreatePostView.vue";
+import ExploreView from "../views/ExploreView.vue";
 import HomeView from "../views/HomeView.vue";
 import LimitView from "../views/LimitView.vue";
 import LoginView from "../views/LoginView.vue";
@@ -70,6 +71,13 @@ const router = createRouter({
       },
     },
     {
+      path: "/explore/:username(.*)",
+      name: "Explore",
+      component: ExploreView,
+      meta: { requiresAuth: true },
+      props: true,
+    },
+    {
       path: "/limited",
       name: "Limit",
       component: LimitView,
@@ -95,6 +103,8 @@ router.beforeEach((to, from) => {
     return { name: "Limit" };
   } else if (to.name === "Login" && isLoggedIn.value) {
     return { name: "Nexus" };
+  } else if (to.name === "Explore" && !to.params.username) {
+    return { name: "Search" };
   }
 });
 

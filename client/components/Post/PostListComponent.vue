@@ -42,7 +42,7 @@ function updateEditing(id: string) {
   </section>
   <section v-else>
     <div class="prompt-unplug">
-      <p>No updates since you last logged in!</p>
+      <p>No posts to see here!</p>
       <v-btn @click="logout" :loading="isLoading" variant="tonal">Unplug?</v-btn>
     </div>
   </section>

@@ -9,14 +9,14 @@ export const useUserStore = defineStore(
     const currentUsername = ref("");
 
     const isUserLimited = ref(false);
-    const isFirstLimitReached = ref(false);
+    const isLimitOverriden = ref(false);
 
     const isLoggedIn = computed(() => currentUsername.value !== "");
 
     const resetStore = () => {
       currentUsername.value = "";
       isUserLimited.value = false;
-      isFirstLimitReached.value = false;
+      isLimitOverriden.value = false;
     };
 
     const createUser = async (username: string, password: string) => {
@@ -33,7 +33,7 @@ export const useUserStore = defineStore(
         isUserLimited.value = true;
       } else {
         isUserLimited.value = false;
-        isFirstLimitReached.value = false;
+        isLimitOverriden.value = false;
       }
     };
 
@@ -61,21 +61,20 @@ export const useUserStore = defineStore(
     };
 
     const limitUser = () => {
-      console.log("limiting user!", isUserLimited, isFirstLimitReached);
       isUserLimited.value = true;
-      isFirstLimitReached.value = true;
     };
 
     const overrideLimit = async () => {
       await fetchy("/api/limits/override", "POST");
       isUserLimited.value = false;
+      isLimitOverriden.value = true;
     };
 
     return {
       currentUsername,
       isLoggedIn,
       isUserLimited,
-      isFirstLimitReached,
+      isLimitOverriden,
       createUser,
       loginUser,
       updateSession,

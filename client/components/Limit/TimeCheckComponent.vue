@@ -1,17 +1,25 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
+import { useRoute } from "vue-router";
 import router from "../../router";
 import { useUserStore } from "../../stores/user";
 import { fetchy } from "../../utils/fetchy";
 
-const { isFirstLimitReached, limitUser, isLoggedIn } = useUserStore();
+const { limitUser, isLoggedIn } = useUserStore();
 
 const currentTime = ref("");
-const nextLimitHour = ref();
-const nextLimitMinute = ref();
+const nextLimitHourStart = ref();
+const nextLimitMinuteStart = ref();
+const nextLimitHourEnd = ref();
+const nextLimitMinuteEnd = ref();
 const noLimits = ref(false);
 
-function updateTime() {
+const currentRoute = useRoute();
+const currentRouteName = computed(() => currentRoute.name);
+
+const firstLimitReached = ref(false);
+
+async function updateTime() {
   // Update clock component
   const currentDate = new Date();
   const currentHour = currentDate.getHours();
@@ -21,20 +29,30 @@ function updateTime() {
   currentTime.value = `${currentHour12}:${currentMinute} ${timePeriod}`;
 
   // Check if a limit has been reached
-  if (!noLimits.value && !isFirstLimitReached && (currentHour > nextLimitHour.value || (currentHour === nextLimitHour.value && currentMinute >= nextLimitMinute.value))) {
-    console.log("first limit reached!", isFirstLimitReached);
-    console.log("time check limit");
+  if (currentRouteName.value !== "Limit" && !noLimits.value && !firstLimitReached.value && isLimitReached(currentHour, currentDate.getMinutes())) {
     limitUser();
+    firstLimitReached.value = true;
     void router.push({ name: "Limit" });
+    await getNextLimit();
   }
+}
+
+function isLimitReached(currentHour: number, currentMinute: number) {
+  const pastLimitStart = currentHour > nextLimitHourStart.value || (currentHour === nextLimitHourStart.value && currentMinute >= nextLimitMinuteStart.value);
+  const beforeLimitEnd = currentHour < nextLimitHourEnd.value || (currentHour === nextLimitHourEnd.value && currentMinute < nextLimitMinuteEnd.value);
+  const limitWraps = nextLimitHourEnd.value > nextLimitHourStart.value || (nextLimitHourEnd.value === nextLimitHourStart.value && nextLimitMinuteStart.value >= nextLimitMinuteEnd.value);
+
+  return pastLimitStart && (limitWraps || beforeLimitEnd);
 }
 
 async function getNextLimit() {
   try {
     const nextLimit = await fetchy(`/api/limits/next`, "GET");
-    if (nextLimit.hour && nextLimit.minute) {
-      nextLimitHour.value = nextLimit.hour;
-      nextLimitMinute.value = nextLimit.minute;
+    if (nextLimit.hourStart !== null && nextLimit.hourEnd !== null && nextLimit.minuteStart !== null && nextLimit.minuteEnd !== null) {
+      nextLimitHourStart.value = nextLimit.hourStart;
+      nextLimitMinuteStart.value = nextLimit.minuteStart;
+      nextLimitHourEnd.value = nextLimit.hourEnd;
+      nextLimitMinuteEnd.value = nextLimit.minuteEnd;
     } else {
       noLimits.value = true;
     }
@@ -43,22 +61,28 @@ async function getNextLimit() {
   }
 }
 
-setInterval(() => {
+setInterval(async () => {
   if (isLoggedIn) {
-    updateTime();
+    await updateTime();
   }
-}, 1000);
+}, 5000);
+
+setInterval(async () => {
+  if (isLoggedIn) {
+    await getNextLimit();
+  }
+}, 10000);
 
 onBeforeMount(async () => {
-  updateTime();
+  await updateTime();
   await getNextLimit();
 });
 </script>
 
 <template>
-  <div class="time-check" :class="{ elapsed: isFirstLimitReached }" @refreshLimits="getNextLimit">
+  <div class="time-check" :class="{ elapsed: firstLimitReached }">
     {{ currentTime }}
-    <v-icon v-if="isFirstLimitReached" size="x-small" icon="mdi-timer-alert" />
+    <v-icon v-if="firstLimitReached" size="x-small" icon="mdi-timer-alert" />
   </div>
 </template>
 
