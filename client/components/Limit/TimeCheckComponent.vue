@@ -6,7 +6,7 @@ import { useUserStore } from "../../stores/user";
 import { fetchy } from "../../utils/fetchy";
 
 const userStore = useUserStore();
-const { limitUser } = userStore;
+const { limitUser, isLimitOverriden } = userStore;
 
 const currentTime = ref("");
 const nextLimitHourStart = ref();
@@ -30,11 +30,14 @@ async function updateTime() {
   currentTime.value = `${currentHour12}:${currentMinute} ${timePeriod}`;
 
   // Check if a limit has been reached
-  if (currentRouteName.value !== "Limit" && !noLimits.value && !firstLimitReached.value && isLimitReached(currentHour, currentDate.getMinutes())) {
-    limitUser();
+  if (currentRouteName.value !== "Limit" && !isLimitOverriden && !noLimits.value && !firstLimitReached.value && isLimitReached(currentHour, currentDate.getMinutes())) {
+    await userStore.updateSession();
+    if (!isLimitOverriden) {
+      limitUser();
+      void router.push({ name: "Limit" });
+      await getNextLimit();
+    }
     firstLimitReached.value = true;
-    void router.push({ name: "Limit" });
-    await getNextLimit();
   }
 }
 
