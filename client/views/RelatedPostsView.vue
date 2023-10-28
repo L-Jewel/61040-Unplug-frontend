@@ -20,13 +20,17 @@ async function getRelatedPosts() {
   }
   const relatedPostsList = [];
   const relatedPostsSet = new Set<string>();
-  for (const relatedPost of relatedPostsIDs.slice(0, 10)) {
+  for (const relatedPost of relatedPostsIDs) {
     try {
       const postResult = await fetchy(`/api/posts/${relatedPost}`, "GET");
       // Prevent duplicates
-      if (!relatedPostsSet.has(postResult._id)) {
+      if (!relatedPostsSet.has(postResult._id) && postResult._id !== props.post) {
         relatedPostsList.push(postResult);
         relatedPostsSet.add(postResult._id);
+      }
+      // Caps the related content list
+      if (relatedPostsList.length >= 10) {
+        break;
       }
     } catch {
       continue;

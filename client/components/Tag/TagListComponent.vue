@@ -40,7 +40,6 @@ const addTag = async () => {
 };
 
 const deleteTag = async (tag: string) => {
-  console.log(tag, `/tags/${tag}/${props.post._id}`);
   try {
     await fetchy(`api/tags/${tag}/${props.post._id}`, "DELETE");
   } catch (_) {

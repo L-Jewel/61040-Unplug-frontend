@@ -5,6 +5,10 @@
   --base-bg: #f1f3f5;
 }
 
+#btn {
+  font-weight: bold;
+}
+
 #action-btn {
   background-color: #bbdefb;
   font-weight: bold;

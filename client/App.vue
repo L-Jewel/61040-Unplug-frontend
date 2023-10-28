@@ -42,7 +42,7 @@ onBeforeMount(async () => {
         </RouterLink>
       </div>
       <TimeCheckComponent v-if="isLoggedIn" />
-      <v-btn v-if="isLoggedIn" color="primary" @click="logout" :loading="isLoading" variant="tonal">Logout</v-btn>
+      <v-btn v-if="isLoggedIn" id="btn" color="primary" @click="logout" :loading="isLoading" variant="tonal">Logout</v-btn>
       <RouterLink v-else :to="{ name: 'Login' }">
         <v-btn variant="tonal" color="primary"> Login </v-btn>
       </RouterLink>

@@ -37,13 +37,13 @@ function updateEditing(id: string) {
     </article>
     <div class="prompt-unplug">
       <p>You're all caught up!</p>
-      <v-btn @click="logout" color="primary" :loading="isLoading" variant="tonal">Unplug?</v-btn>
+      <v-btn @click="logout" id="btn" color="primary" :loading="isLoading" variant="tonal">Unplug?</v-btn>
     </div>
   </section>
   <section v-else>
     <div class="prompt-unplug">
       <p>No posts to see here!</p>
-      <v-btn @click="logout" color="primary" :loading="isLoading" variant="tonal">Unplug?</v-btn>
+      <v-btn @click="logout" id="btn" color="primary" :loading="isLoading" variant="tonal">Unplug?</v-btn>
     </div>
   </section>
 </template>

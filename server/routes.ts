@@ -11,6 +11,12 @@ import Responses from "./responses";
 
 import { UserLimitedError } from "./concepts/limit";
 
+type PostRecord = {
+  _id: ObjectId;
+  author: string;
+  content: string;
+};
+
 class Routes {
   // User + Authentication Methods
   @Router.get("/session")
@@ -122,7 +128,9 @@ class Routes {
   }
   @Router.get("/posts/:_id")
   async getPost(_id: ObjectId) {
-    return await Post.getPost(_id);
+    const post = await Post.getPost(_id);
+    const author = await User.getUserById(post.author);
+    return { _id: post._id, author: author.username, content: post.content };
   }
   @Router.get("/posts/:_id/tags")
   async getPostTags(_id: ObjectId) {
@@ -259,9 +267,14 @@ class Routes {
 
     const watchlist = await Watching.getWatchlist(user);
     const lastLogin = await ScreenTime.getLastStart(user);
-    let feed: PostDoc[] = [];
+    let feed: PostRecord[] = [];
     for (const watched of watchlist) {
-      feed = feed.concat(await Post.getByAuthor(new ObjectId(watched), lastLogin));
+      const watchedUsername = (await User.getUserById(watched)).username;
+      feed = feed.concat(
+        (await Post.getByAuthor(new ObjectId(watched), lastLogin)).map((post) => {
+          return { _id: post._id, author: watchedUsername, content: post.content };
+        }),
+      );
     }
     return feed;
   }
